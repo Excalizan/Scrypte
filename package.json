@@ -24,6 +24,7 @@
   "homepage": "https://github.com/Excalizan/Scrypte#readme",
   "dependencies": {
     "dotenv": "^16.3.1",
-    "node-telegram-bot-api": "^0.61.0"
+    "node-telegram-bot-api": "^0.61.0",
+    "ytdl-core": "^4.11.5"
   }
 }

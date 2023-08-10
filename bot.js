@@ -1,49 +1,88 @@
 require('dotenv').config()
 
 const TelegramBot = require('node-telegram-bot-api')
+const fs = require('fs')
+const ytdl = require('ytdl-core')
 
-// replace the value below with the Telegram token you receive from @BotFather
 const token = process.env.TOKEN
-
-// Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(token, { polling: true })
-
-// Matches "/echo [whatever]"
-bot.onText(/\/echo (.+)/, (msg, match) => {
-	// 'msg' is the received Message from Telegram
-	// 'match' is the result of executing the regexp above on the text content
-	// of the message
-
-	const chatId = msg.chat.id
-  const resp = match[1] // the captured "whatever"
-
-
-	// send back the matched "whatever" to the chat
-	bot.sendMessage(chatId, resp)
-})
 
 // help
 bot.onText(/\/help/, (msg) => {
-  const chatId = msg.chat.id
-  const resp = 'Help message'
+	const chatId = msg.chat.id
+	const resp = 'Help message'
 
-  bot.sendMessage(chatId, resp)
+	bot.sendMessage(chatId, resp)
 })
 
 // match youtube link
-bot.onText(/https:\/\/www\.youtube\.com\/watch\?v=(.+)/, (msg, match) => {
-  const chatId = msg.chat.id
-  const resp = `https://www.youtube.com/watch?v=${match[1]}`
-  console.log(match[1])
-  bot.sendMessage(chatId, resp)
-})
+bot.onText(
+	/(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+/,
+	async (msg, match) => {
+		const chatId = msg.chat.id
+		const url = match[0]
 
-// Listen for any kind of message. There are different kinds of
-// messages.
-bot.on('message', (msg) => {
-	const chatId = msg.chat.id
+		await downloadVideo(chatId, url)
+	}
+)
 
-	// send a message to the chat acknowledging receipt of their message
-  bot.sendMessage(chatId, 'Received your message')
-  console.log(`${msg.chat.username}: ${msg.text}`)
-})
+async function downloadVideo(chatId, url) {
+	try {
+		// Get video information and thumbnail URL
+		const videoInfo = await ytdl.getInfo(url)
+		const title = videoInfo.player_response.videoDetails.title
+		const thumbnailUrl =
+			videoInfo.videoDetails.thumbnails[
+				videoInfo.videoDetails.thumbnails.length - 1
+			].url
+		// Send a message to show the download progress
+		const message = await bot.sendMessage(
+			chatId,
+			`*Downloading video:* ${title}`
+		)
+
+		// Create a writable stream to store the video file
+		const writeStream = fs.createWriteStream(`${title}-${chatId}.mp4`)
+
+		// Start the download and pipe the video data to the writable stream
+		ytdl(url, { filter: 'audioandvideo' }).pipe(writeStream)
+
+		// Set up an interval to update the message with the download progress every 5 seconds
+		let progress = 0
+		const updateInterval = setInterval(() => {
+			progress = writeStream.bytesWritten / (1024 * 1024)
+			bot.editMessageText(
+				`*Downloading video:* ${title} (${progress.toFixed(
+					2
+				)} MB) \u{1F4E6}`,
+				{
+					chat_id: chatId,
+					message_id: message.message_id,
+					parse_mode: 'Markdown', // use Markdown formatting
+				}
+			)
+		}, 2000)
+
+		// When the download is complete, send the video and delete the file
+		writeStream.on('finish', () => {
+			clearInterval(updateInterval) // stop updating the message
+			bot.sendVideo(chatId, `${title}-${chatId}.mp4`, {
+				caption: `*Video downloaded:* ${title} "by" @Excalizan`,
+				thumb: thumbnailUrl,
+				duration: videoInfo.videoDetails.lengthSeconds,
+				parse_mode: 'Markdown',
+			})
+
+				.then(() => {
+					fs.unlinkSync(`${title}-${chatId}.mp4`) // delete the file
+				})
+				.catch((error) => {
+					bot.sendMessage(chatId, 'Error sending video.')
+					console.error(error)
+				})
+		})
+	} catch (error) {
+		bot.sendMessage(chatId, 'Error downloading video.')
+		console.error(error)
+	}
+}
