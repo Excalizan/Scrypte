@@ -41,6 +41,7 @@ bot.onText(
 	}
 )
 
+// TODO: fix instagram story download
 // match instagram story link
 // bot.onText(
 // 	/(https?:\/\/)?(www\.)?(instagram\.com|instagr\.?am)\/stories\/.+/,
