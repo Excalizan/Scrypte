@@ -4,7 +4,10 @@ const TelegramBot = require('node-telegram-bot-api')
 
 const downloadFromYoutube = require('./funcs/youtube')
 const downloadFromInstagram = require('./funcs/instagram')
-const { downloadTrackFromSpotify } = require('./funcs/spotify')
+const {
+	downloadTrackFromSpotify,
+	downloadAlbumFromSpotify,
+} = require('./funcs/spotify')
 
 const token = process.env.TOKEN
 const bot = new TelegramBot(token, { polling: true })

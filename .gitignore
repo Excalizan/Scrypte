@@ -132,3 +132,5 @@ dist
 ffmpeg.exe
 ffplay.exe
 ffprobe.exe
+
+content/*
