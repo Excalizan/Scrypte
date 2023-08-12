@@ -1,11 +1,9 @@
 const ig = require('instagram-url-dl')
 
-function downloadInstagramPost(bot, chatId, url) {
-	const instagramId = url.split('/')[url.split('/').length - 2]
-
+function downloadFromInstagram(bot, chatId, url) {
 	ig(url)
 		.then((res) => {
-			// if there are more than one files
+			// if there are multiple images/videos
 			if (res.data.length > 1) {
 				res.data.forEach((item) => {
 					if (item.type === 'image') {
@@ -23,34 +21,9 @@ function downloadInstagramPost(bot, chatId, url) {
 			}
 		})
 		.catch((err) => {
-			// if (err.message === 'Not a valid URL') {
-			// 	bot.sendMessage(chatId, 'Not a valid URL')
-			// } else {
-			// 	bot.sendMessage(chatId, 'Error')
-			// }
+			bot.sendMessage(chatId, 'Error: ' + err.message)
 			console.log(err)
 		})
 }
 
-function downloadInstagramStory(bot, chatId, url) {
-	const instagramId = url.split('/')[url.split('/').length - 2]
-
-	save(instagramId, 'content/', { story: true })
-		.then((res) => {
-			console.log(res.file)
-			bot.sendVideo(chatId, res.file)
-		})
-		.catch((err) => {
-			if (err.message === 'Not a valid URL') {
-				bot.sendMessage(chatId, 'Not a valid URL')
-			} else {
-				bot.sendMessage(chatId, 'Error')
-			}
-			console.log(err)
-		})
-}
-
-module.exports = {
-	downloadInstagramPost,
-	downloadInstagramStory,
-}
+module.exports = downloadFromInstagram

@@ -3,10 +3,7 @@ require('dotenv').config()
 const TelegramBot = require('node-telegram-bot-api')
 
 const downloadFromYoutube = require('./funcs/youtube')
-const {
-	downloadInstagramPost,
-	downloadInstagramStory,
-} = require('./funcs/instagram')
+const downloadFromInstagram = require('./funcs/instagram')
 
 const token = process.env.TOKEN
 const bot = new TelegramBot(token, { polling: true })
@@ -37,21 +34,20 @@ bot.onText(
 		const chatId = msg.chat.id
 		const url = match[0]
 
-		downloadInstagramPost(bot, chatId, url)
+		downloadFromInstagram(bot, chatId, url)
 	}
 )
 
-// TODO: fix instagram story download
 // match instagram story link
-// bot.onText(
-// 	/(https?:\/\/)?(www\.)?(instagram\.com|instagr\.?am)\/stories\/.+/,
-// 	(msg, match) => {
-// 		const chatId = msg.chat.id
-// 		const url = match[0]
+bot.onText(
+	/(https?:\/\/)?(www\.)?(instagram\.com|instagr\.?am)\/stories\/.+/,
+	(msg, match) => {
+		const chatId = msg.chat.id
+		const url = match[0]
 
-// 		downloadInstagramStory(bot, chatId, url)
-// 	}
-// )
+		downloadFromInstagram(bot, chatId, url)
+	}
+)
 
 // match instagram reel link
 bot.onText(
@@ -60,6 +56,6 @@ bot.onText(
 		const chatId = msg.chat.id
 		const url = match[0]
 
-		downloadInstagramPost(bot, chatId, url)
+		downloadFromInstagram(bot, chatId, url)
 	}
 )
