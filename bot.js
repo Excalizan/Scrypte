@@ -7,6 +7,7 @@ const downloadFromInstagram = require('./funcs/instagram')
 const {
 	downloadTrackFromSpotify,
 	downloadAlbumFromSpotify,
+	downloadPlaylistFromSpotify,
 } = require('./funcs/spotify')
 
 const token = process.env.TOKEN
@@ -81,7 +82,6 @@ bot.onText(
 		const chatId = msg.chat.id
 		const url = match[0]
 
-		// TODO: download album
 		downloadAlbumFromSpotify(bot, chatId, url)
 	}
 )
@@ -93,7 +93,7 @@ bot.onText(
 		const chatId = msg.chat.id
 		const url = match[0]
 
-		// TODO: download playlist
+		// TODO: fix this
 		downloadPlaylistFromSpotify(bot, chatId, url)
 	}
 )

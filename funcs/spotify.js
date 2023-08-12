@@ -63,4 +63,42 @@ async function downloadAlbumFromSpotify(bot, chatId, url) {
 	})
 }
 
-module.exports = { downloadTrackFromSpotify, downloadAlbumFromSpotify }
+
+// TODO: Fix playlist download
+async function downloadPlaylistFromSpotify(bot, chatId, url) {
+	await SpottyDL.getPlaylist(url).then(async (results) => {
+		let playlist = await SpottyDL.downloadPlaylist(
+			results,
+			'content',
+			false
+		).then((res) => {
+			res.forEach((track) => {
+				bot.sendAudio(
+					chatId,
+					track.filename,
+					{
+						title: track.title,
+						performer: track.artist,
+					},
+					{
+						filename: `content/${res.filename}`,
+						contentType: 'audio/mp3',
+					}
+				)
+					.then(() => {
+						fs.unlinkSync(track.filename)
+					})
+					.catch((err) => {
+						console.log(err)
+					})
+			})
+		})
+
+		console.log(playlist)
+	})
+}
+module.exports = {
+	downloadTrackFromSpotify,
+	downloadAlbumFromSpotify,
+	downloadPlaylistFromSpotify,
+}
