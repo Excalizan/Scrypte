@@ -4,6 +4,7 @@ const TelegramBot = require('node-telegram-bot-api')
 
 const downloadFromYoutube = require('./funcs/youtube')
 const downloadFromInstagram = require('./funcs/instagram')
+const { downloadTrackFromSpotify } = require('./funcs/spotify')
 
 const token = process.env.TOKEN
 const bot = new TelegramBot(token, { polling: true })
@@ -57,5 +58,39 @@ bot.onText(
 		const url = match[0]
 
 		downloadFromInstagram(bot, chatId, url)
+	}
+)
+// match spotify track link
+bot.onText(
+	/(https?:\/\/)?(www\.)?(open\.spotify\.com|spotify\.?com)\/track\/.+/,
+	(msg, match) => {
+		const chatId = msg.chat.id
+		const url = match[0]
+
+		downloadTrackFromSpotify(bot, chatId, url)
+	}
+)
+
+// match spotify album link
+bot.onText(
+	/(https?:\/\/)?(www\.)?(open\.spotify\.com|spotify\.?com)\/album\/.+/,
+	(msg, match) => {
+		const chatId = msg.chat.id
+		const url = match[0]
+
+		// TODO: download album
+		downloadAlbumFromSpotify(bot, chatId, url)
+	}
+)
+
+// match spotify playlist link
+bot.onText(
+	/(https?:\/\/)?(www\.)?(open\.spotify\.com|spotify\.?com)\/playlist\/.+/,
+	(msg, match) => {
+		const chatId = msg.chat.id
+		const url = match[0]
+
+		// TODO: download playlist
+		downloadPlaylistFromSpotify(bot, chatId, url)
 	}
 )
