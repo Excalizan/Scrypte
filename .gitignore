@@ -134,3 +134,4 @@ ffplay.exe
 ffprobe.exe
 
 content/*
+.vscode

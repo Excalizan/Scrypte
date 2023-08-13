@@ -22,47 +22,50 @@ async function downloadTrackFromSpotify(bot, chatId, url) {
 					})
 					.catch((err) => {
 						console.log(err)
+						bot.sendMessage(chatId, 'Error sending track')
 					})
 			})
 			.catch((err) => {
 				console.log(err)
+				bot.sendMessage(chatId, 'Error downloading track')
 			})
 	})
 }
 
 async function downloadAlbumFromSpotify(bot, chatId, url) {
 	await SpottyDL.getAlbum(url).then(async (results) => {
-		let album = await SpottyDL.downloadAlbum(
-			results,
-			'content',
-			false
-		).then((res) => {
-			res.forEach((track) => {
-				bot.sendAudio(
-					chatId,
-					track.filename,
-					{
-						title: track.title,
-						performer: track.artist,
-					},
-					{
-						filename: `content/${res.filename}`,
-						contentType: 'audio/mp3',
-					}
-				)
-					.then(() => {
-						fs.unlinkSync(track.filename)
-					})
-					.catch((err) => {
-						console.log(err)
-					})
+		let album = await SpottyDL.downloadAlbum(results, 'content', false)
+			.then((res) => {
+				res.forEach((track) => {
+					bot.sendAudio(
+						chatId,
+						track.filename,
+						{
+							title: track.title,
+							performer: track.artist,
+						},
+						{
+							filename: `content/${res.filename}`,
+							contentType: 'audio/mp3',
+						}
+					)
+						.then(() => {
+							fs.unlinkSync(track.filename)
+						})
+						.catch((err) => {
+							console.log(err)
+							bot.sendMessage(chatId, 'Error sending track')
+						})
+				})
 			})
-		})
+			.catch((err) => {
+				console.log(err)
+				bot.sendMessage(chatId, 'Error downloading album')
+			})
 
 		console.log(album)
 	})
 }
-
 
 // TODO: Fix playlist download
 async function downloadPlaylistFromSpotify(bot, chatId, url) {
@@ -71,28 +74,34 @@ async function downloadPlaylistFromSpotify(bot, chatId, url) {
 			results,
 			'content',
 			false
-		).then((res) => {
-			res.forEach((track) => {
-				bot.sendAudio(
-					chatId,
-					track.filename,
-					{
-						title: track.title,
-						performer: track.artist,
-					},
-					{
-						filename: `content/${res.filename}`,
-						contentType: 'audio/mp3',
-					}
-				)
-					.then(() => {
-						fs.unlinkSync(track.filename)
-					})
-					.catch((err) => {
-						console.log(err)
-					})
+		)
+			.then((res) => {
+				res.forEach((track) => {
+					bot.sendAudio(
+						chatId,
+						track.filename,
+						{
+							title: track.title,
+							performer: track.artist,
+						},
+						{
+							filename: `content/${res.filename}`,
+							contentType: 'audio/mp3',
+						}
+					)
+						.then(() => {
+							fs.unlinkSync(track.filename)
+						})
+						.catch((err) => {
+							console.log(err)
+							bot.sendMessage(chatId, 'Error sending track')
+						})
+				})
 			})
-		})
+			.catch((err) => {
+				console.log(err)
+				bot.sendMessage(chatId, 'Error downloading playlist')
+			})
 
 		console.log(playlist)
 	})

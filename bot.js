@@ -13,6 +13,8 @@ const {
 const token = process.env.TOKEN
 const bot = new TelegramBot(token, { polling: true })
 
+console.log('Bot is running...')
+
 // help
 bot.onText(/\/help/, (msg) => {
 	const chatId = msg.chat.id
