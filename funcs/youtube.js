@@ -17,7 +17,9 @@ async function downloadFromYoutube(bot, chatId, url) {
 		)
 
 		// Create a writable stream to store the video file
-		const writeStream = fs.createWriteStream(`content/${title}-${chatId}.mp4`)
+		const writeStream = fs.createWriteStream(
+			`content/${title}-${chatId}.mp4`
+		)
 
 		// Start the download and pipe the video data to the writable stream
 		ytdl(url, { filter: 'audioandvideo' }).pipe(writeStream)
@@ -50,7 +52,10 @@ async function downloadFromYoutube(bot, chatId, url) {
 					duration: videoInfo.videoDetails.lengthSeconds,
 					parse_mode: 'Markdown',
 				},
-				{ filename: `content/${title}-${chatId}.mp4`, contentType: 'video/mp4' }
+				{
+					filename: `content/${title}-${chatId}.mp4`,
+					contentType: 'video/mp4',
+				}
 			)
 
 				.then(() => {
