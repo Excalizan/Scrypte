@@ -9,6 +9,7 @@ const {
 	downloadAlbumFromSpotify,
 	downloadPlaylistFromSpotify,
 } = require('./funcs/spotify')
+const downloadFromReddit = require('./funcs/reddit')
 
 const token = process.env.TOKEN
 const bot = new TelegramBot(token, { polling: true })
@@ -97,5 +98,16 @@ bot.onText(
 
 		// TODO: fix this
 		downloadPlaylistFromSpotify(bot, chatId, url)
+	}
+)
+
+// match reddit link
+bot.onText(
+	/(https?:\/\/)?(www\.)?(reddit\.com|redd\.?it)\/.+/,
+	(msg, match) => {
+		const chatId = msg.chat.id
+		const url = match[0]
+
+		downloadFromReddit(bot, chatId, url)
 	}
 )
