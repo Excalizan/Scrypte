@@ -14,7 +14,7 @@ async function downloadTrackFromSpotify(bot, chatId, url) {
 					},
 					{
 						filename: `content/${res.filename}`,
-						contentType: 'audio/mp3',
+						contentType: 'audio/mpeg',
 					}
 				)
 					.then(() => {
@@ -34,7 +34,7 @@ async function downloadTrackFromSpotify(bot, chatId, url) {
 
 async function downloadAlbumFromSpotify(bot, chatId, url) {
 	await SpottyDL.getAlbum(url).then(async (results) => {
-		let album = await SpottyDL.downloadAlbum(results, 'content', false)
+		await SpottyDL.downloadAlbum(results, 'content', false)
 			.then((res) => {
 				res.forEach((track) => {
 					bot.sendAudio(
@@ -46,7 +46,7 @@ async function downloadAlbumFromSpotify(bot, chatId, url) {
 						},
 						{
 							filename: `content/${res.filename}`,
-							contentType: 'audio/mp3',
+							contentType: 'audio/mpeg',
 						}
 					)
 						.then(() => {
@@ -62,49 +62,45 @@ async function downloadAlbumFromSpotify(bot, chatId, url) {
 				console.log(err)
 				bot.sendMessage(chatId, 'Error downloading album')
 			})
-
-		console.log(album)
 	})
 }
 
 // TODO: Fix playlist download
 async function downloadPlaylistFromSpotify(bot, chatId, url) {
-	await SpottyDL.getPlaylist(url).then(async (results) => {
-		let playlist = await SpottyDL.downloadPlaylist(
-			results,
-			'content',
-			false
-		)
-			.then((res) => {
-				res.forEach((track) => {
-					bot.sendAudio(
-						chatId,
-						track.filename,
-						{
-							title: track.title,
-							performer: track.artist,
-						},
-						{
-							filename: `content/${res.filename}`,
-							contentType: 'audio/mp3',
-						}
-					)
-						.then(() => {
-							fs.unlinkSync(track.filename)
-						})
-						.catch((err) => {
-							console.log(err)
-							bot.sendMessage(chatId, 'Error sending track')
-						})
-				})
-			})
-			.catch((err) => {
-				console.log(err)
-				bot.sendMessage(chatId, 'Error downloading playlist')
-			})
-
-		console.log(playlist)
-	})
+	bot.sendMessage(
+		chatId,
+		'This feature is currently disabled, sorry for the inconvenience.\nDeveloper contact: @excalizan'
+	)
+	// await SpottyDL.getPlaylist(url).then(async (results) => {
+	// 	await SpottyDL.downloadPlaylist(results, 'content', false)
+	// 		.then((res) => {
+	// 			res.forEach((track) => {
+	// 				bot.sendAudio(
+	// 					chatId,
+	// 					track.filename,
+	// 					{
+	// 						title: track.title,
+	// 						performer: track.artist,
+	// 					},
+	// 					{
+	// 						filename: `content/${res.filename}`,
+	// 						contentType: 'audio/mpeg',
+	// 					}
+	// 				)
+	// 					.then(() => {
+	// 						fs.unlinkSync(track.filename)
+	// 					})
+	// 					.catch((err) => {
+	// 						console.log(err)
+	// 						bot.sendMessage(chatId, 'Error sending track')
+	// 					})
+	// 			})
+	// 		})
+	// 		.catch((err) => {
+	// 			console.log(err)
+	// 			bot.sendMessage(chatId, 'Error downloading playlist')
+	// 		})
+	// })
 }
 module.exports = {
 	downloadTrackFromSpotify,
