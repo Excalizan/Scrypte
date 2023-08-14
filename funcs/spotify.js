@@ -1,80 +1,74 @@
-const SpottyDL = require('spottydl')
+require('dotenv').config()
+
+const Spotify = require('spotifydl-core').default
 const fs = require('fs')
 
+cred = {
+	clientId: process.env.SPOTIFY_CLIENT_ID,
+	clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+}
+const spotify = new Spotify(cred)
+
 async function downloadTrackFromSpotify(bot, chatId, url) {
-	await SpottyDL.getTrack(url).then(async (results) => {
-		await SpottyDL.downloadTrack(results, 'content')
-			.then((res) => {
-				bot.sendAudio(
-					chatId,
-					res[0].filename,
-					{
-						title: results.title,
-						performer: results.artist,
-					},
-					{
-						filename: `content/${res.filename}`,
-						contentType: 'audio/mpeg',
-					}
-				)
-					.then(() => {
-						fs.unlinkSync(res[0].filename)
-					})
-					.catch((err) => {
-						console.log(err)
-						bot.sendMessage(chatId, 'Error sending track')
-					})
-			})
-			.catch((err) => {
-				console.log(err)
-				bot.sendMessage(chatId, 'Error downloading track')
-			})
-	})
+	console.log(url)
+	const data = await spotify.getTrack(url)
+	const buffer = await spotify.downloadTrack(url)
+	bot.sendAudio(
+		chatId,
+		buffer,
+		{
+			title: data.name,
+			performer: data.artists[0].name,
+		},
+		{
+			filename: `${data.name}.mp3`,
+			contentType: 'audio/mpeg',
+		}
+	)
 }
 
 async function downloadAlbumFromSpotify(bot, chatId, url) {
-	await SpottyDL.getAlbum(url).then(async (results) => {
-		await SpottyDL.downloadAlbum(results, 'content', false)
-			.then((res) => {
-				res.forEach((track) => {
-					bot.sendAudio(
-						chatId,
-						track.filename,
-						{
-							title: track.title,
-							performer: track.artist,
-						},
-						{
-							filename: `content/${res.filename}`,
-							contentType: 'audio/mpeg',
-						}
-					)
-						.then(() => {
-							fs.unlinkSync(track.filename)
-						})
-						.catch((err) => {
-							console.log(err)
-							bot.sendMessage(chatId, 'Error sending track')
-						})
-				})
-			})
-			.catch((err) => {
-				console.log(err)
-				bot.sendMessage(chatId, 'Error downloading album')
-			})
-	})
+	const albumData = await spotify.getAlbum(url)
+	const buffer = await spotify.downloadAlbum(url)
+
+	for (let i = 0; i < albumData.tracks.length; i++) {
+		const track = albumData.tracks[i]
+		const trackData = await spotify.getTrack(track)
+		bot.sendAudio(
+			chatId,
+			buffer[i],
+			{
+				title: trackData.name,
+				performer: trackData.artists[0].name,
+			},
+			{
+				filename: `${trackData.name}.mp3`,
+				contentType: 'audio/mpeg',
+			}
+		)
+	}
 }
 
-// TODO: Fix playlist download
 async function downloadPlaylistFromSpotify(bot, chatId, url) {
-	// bot.sendMessage(
-	// 	chatId,
-	// 	'This feature is currently disabled, sorry for the inconvenience.\nDeveloper contact: @excalizan'
-	// )
-	await SpottyDL.getPlaylist(url).then(async (results) => {
-		let playlist = await SpottyDL.downloadPlaylist(results, 'content')
-		console.log(playlist)
-	})
+	const playlistData = await spotify.getPlaylist(url)
+	const buffer = await spotify.downloadPlaylist(url)
+
+	for (let i = 0; i < playlistData.tracks.length; i++) {
+		const track = playlistData.tracks[i]
+		const trackData = await spotify.getTrack(track)
+		bot.sendAudio(
+			chatId,
+			buffer[i],
+			{
+				title: trackData.name,
+				performer: trackData.artists[0].name,
+			},
+			{
+				filename: `${trackData.name}.mp3`,
+				contentType: 'audio/mpeg',
+			}
+		)
+	}
 }
 module.exports = {
 	downloadTrackFromSpotify,
