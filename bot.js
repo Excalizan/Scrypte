@@ -16,11 +16,13 @@ const bot = new TelegramBot(token, { polling: true })
 console.log('Bot is running...')
 
 // help
-bot.onText(/\/help/, (msg) => {
+bot.onText(/\/help/, (msg, match) => {
 	const chatId = msg.chat.id
-	const resp = 'Help message'
 
-	bot.sendMessage(chatId, resp)
+	const response =
+		'Welcome to Scrypte!\nSend a valid Instagram, Youtube or Spotify link to download the content.'
+
+	bot.sendMessage(chatId, response)
 })
 
 // match youtube link
@@ -66,6 +68,7 @@ bot.onText(
 		downloadFromInstagram(bot, chatId, url)
 	}
 )
+
 // match spotify track link
 bot.onText(
 	/(https?:\/\/)?(www\.)?(open\.spotify\.com|spotify\.?com)\/track\/.+/,
@@ -95,7 +98,6 @@ bot.onText(
 		const chatId = msg.chat.id
 		const url = match[0]
 
-		// TODO: fix this
 		downloadPlaylistFromSpotify(bot, chatId, url)
 	}
 )
