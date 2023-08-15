@@ -1,2 +1,2 @@
 # Scrypte
-Telegram bot to download all kinds of media.
+Telegram bot to download media from Instagram, Youtube and Spotify
