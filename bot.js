@@ -32,6 +32,33 @@ bot.onText(/\/help/, (msg, match) => {
 	bot.sendMessage(chatId, response)
 })
 
+// !dev commands
+
+// get network upload speed
+bot.onText(/\/upload/, async (msg) => {
+	const chatId = msg.chat.id
+
+	// if user is not the developer
+	if (String(msg.from.id) !== String(process.env.DEV_ID)) {
+		return
+	}
+
+	await getNetworkUploadSpeed(bot, chatId)
+})
+
+// get network download speed
+bot.onText(/\/download/, async (msg) => {
+	const chatId = msg.chat.id
+
+	// if user is not the developer
+	if (String(msg.from.id) !== String(process.env.DEV_ID)) {
+		return
+	}
+
+	await getNetworkDownloadSpeed(bot, chatId)
+})
+
+
 // match youtube link
 bot.onText(
 	/(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+/,
@@ -109,28 +136,3 @@ bot.onText(
 	}
 )
 
-// !dev commands
-
-// get network upload speed
-bot.onText(/\/upload/, async (msg) => {
-	const chatId = msg.chat.id
-
-	// if user is not the developer
-	if (msg.from.id !== process.env.DEV_ID) {
-		return
-	}
-
-	await getNetworkUploadSpeed(bot, chatId)
-})
-
-// get network download speed
-bot.onText(/\/download/, async (msg) => {
-	const chatId = msg.chat.id
-
-	// if user is not the developer
-	if (msg.from.id !== process.env.DEV_ID) {
-		return
-	}
-
-	await getNetworkDownloadSpeed(bot, chatId)
-})

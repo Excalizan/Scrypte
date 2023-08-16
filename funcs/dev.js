@@ -2,18 +2,29 @@ const NetworkSpeed = require('network-speed')
 const testNetworkSpeed = new NetworkSpeed()
 
 async function getNetworkDownloadSpeed(bot, chatId) {
-	bot.sendMessage(chatId, 'Calculating Download Speed...')
+	console.log('Calculating Download Speed...')
+	bot.sendMessage(chatId, 'Calculating Download Speed...').catch((err) => {
+		console.log(err)
+	})
 	const baseUrl = 'https://eu.httpbin.org/stream-bytes/500000'
 	const fileSizeInBytes = 500000
 	const speed = await testNetworkSpeed.checkDownloadSpeed(
 		baseUrl,
 		fileSizeInBytes
 	)
-	bot.sendMessage(chatId, `Download Speed: ${speed.mbps} Mbps`)
+	bot.sendMessage(chatId, `Download Speed: ${speed.mbps} Mbps`).catch(
+		(err) => {
+			console.log(err)
+		}
+	)
+	console.log(`Download Speed: ${speed.mbps} Mbps`)
 }
 
 async function getNetworkUploadSpeed(bot, chatId) {
-	bot.sendMessage(chatId, 'Calculating Upload Speed...')
+	console.log('Calculating Upload Speed...')
+	bot.sendMessage(chatId, 'Calculating Upload Speed...').catch((err) => {
+		console.log(err)
+	})
 	const options = {
 		hostname: 'www.google.com',
 		port: 80,
@@ -28,7 +39,10 @@ async function getNetworkUploadSpeed(bot, chatId) {
 		options,
 		fileSizeInBytes
 	)
-	bot.sendMessage(chatId, `Upload Speed: ${speed.mbps} Mbps`)
+	bot.sendMessage(chatId, `Upload Speed: ${speed.mbps} Mbps`).catch((err) => {
+		console.log(err)
+	})
+	console.log(`Upload Speed: ${speed.mbps} Mbps`)
 }
 
 module.exports = {
