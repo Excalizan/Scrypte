@@ -129,10 +129,6 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-ffmpeg.exe
-ffplay.exe
-ffprobe.exe
-
 content/*
 !content/README.md
 .vscode

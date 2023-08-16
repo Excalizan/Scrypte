@@ -21,10 +21,7 @@ RUN apt-get update -qq && \
     apt-get install -y build-essential pkg-config python-is-python3
 
 # Install ffmpeg
-RUN apt-get install -y ffmpeg
-
-# Add ffmpeg to path
-ENV PATH="/usr/bin:${PATH}"
+RUN apk add --no-cache ffmpeg
 
 # Install node modules
 COPY --link package-lock.json package.json ./
