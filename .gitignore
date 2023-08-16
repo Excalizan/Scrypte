@@ -134,4 +134,5 @@ ffplay.exe
 ffprobe.exe
 
 content/*
+!content/README.md
 .vscode

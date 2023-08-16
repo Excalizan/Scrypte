@@ -11,10 +11,11 @@ async function downloadFromYoutube(bot, chatId, url) {
 				videoInfo.videoDetails.thumbnails.length - 1
 			].url
 		// Send a message to show the download progress
-		const message = await bot.sendMessage(
-			chatId,
-			`*Downloading video:* ${title}`
-		)
+		const message = await bot
+			.sendMessage(chatId, `*Downloading video:* ${title}`)
+			.catch((err) => {
+				console.log(err)
+			})
 
 		// Create a writable stream to store the video file
 		const writeStream = fs.createWriteStream(
@@ -24,21 +25,21 @@ async function downloadFromYoutube(bot, chatId, url) {
 		// Start the download and pipe the video data to the writable stream
 		ytdl(url, { filter: 'audioandvideo' }).pipe(writeStream)
 
-		// Set up an interval to update the message with the download progress every 5 seconds
+		// Set up an interval to update the message with the download progress every second
 		let progress = 0
 		const updateInterval = setInterval(() => {
 			progress = writeStream.bytesWritten / (1024 * 1024)
 			bot.editMessageText(
-				`*Downloading video:* ${title} (${progress.toFixed(
-					2
-				)} MB) \u{1F4E6}`,
+				`*Downloading video:* ${title} (${progress.toFixed(2)} MB)`,
 				{
 					chat_id: chatId,
 					message_id: message.message_id,
 					parse_mode: 'Markdown', // use Markdown formatting
 				}
-			)
-		}, 2000)
+			).catch((err) => {
+				console.log(err)
+			})
+		}, 1000)
 
 		// When the download is complete, send the video and delete the file
 		writeStream.on('finish', () => {
@@ -57,6 +58,14 @@ async function downloadFromYoutube(bot, chatId, url) {
 					contentType: 'video/mp4',
 				}
 			)
+				.catch((err) => {
+					bot.sendMessage(chatId, 'Error sending video.').catch(
+						(err) => {
+							console.log(err)
+						}
+					)
+					console.log(err)
+				})
 
 				.then(() => {
 					try {
@@ -66,12 +75,18 @@ async function downloadFromYoutube(bot, chatId, url) {
 					}
 				})
 				.catch((error) => {
-					bot.sendMessage(chatId, 'Error sending video.')
+					bot.sendMessage(chatId, 'Error sending video.').catch(
+						(err) => {
+							console.log(err)
+						}
+					)
 					console.error(error)
 				})
 		})
 	} catch (error) {
-		bot.sendMessage(chatId, 'Error downloading video.')
+		bot.sendMessage(chatId, 'Error downloading video.').catch((err) => {
+			console.log(err)
+		})
 		console.error(error)
 	}
 }
