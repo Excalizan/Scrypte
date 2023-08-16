@@ -30,5 +30,8 @@
     "spotifydl-core": "^0.2.0",
     "spottydl": "^0.2.2",
     "ytdl-core": "^4.11.5"
+  },
+  "devDependencies": {
+    "@flydotio/dockerfile": "^0.4.4"
   }
 }
