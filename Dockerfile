@@ -21,7 +21,7 @@ RUN apt-get update -qq && \
     apt-get install -y build-essential pkg-config python-is-python3
 
 # Install ffmpeg
-RUN apt-get install -y ffmpeg
+RUN apt-get -y update && apt-get install -y ffmpeg 
 
 # Install node modules
 COPY --link package-lock.json package.json ./
