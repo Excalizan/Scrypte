@@ -1,4 +1,7 @@
 require('dotenv').config()
+process.env['NTBA_FIX_350'] = 1
+/* required to disable the deprecation warning, 
+will be fixed when node-telegram-bot-api gets a new update */
 
 const TelegramBot = require('node-telegram-bot-api')
 
