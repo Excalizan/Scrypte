@@ -12,6 +12,10 @@ const {
 	downloadAlbumFromSpotify,
 	downloadPlaylistFromSpotify,
 } = require('./funcs/spotify')
+const {
+	getNetworkUploadSpeed,
+	getNetworkDownloadSpeed,
+} = require('./funcs/dev')
 
 const token = process.env.TOKEN
 const bot = new TelegramBot(token, { polling: true })
@@ -104,3 +108,29 @@ bot.onText(
 		downloadPlaylistFromSpotify(bot, chatId, url)
 	}
 )
+
+// !dev commands
+
+// get network upload speed
+bot.onText(/\/upload/, async (msg) => {
+	const chatId = msg.chat.id
+
+	// if user is not the developer
+	if (msg.from.id !== process.env.DEV_ID) {
+		return
+	}
+
+	await getNetworkUploadSpeed(bot, chatId)
+})
+
+// get network download speed
+bot.onText(/\/download/, async (msg) => {
+	const chatId = msg.chat.id
+
+	// if user is not the developer
+	if (msg.from.id !== process.env.DEV_ID) {
+		return
+	}
+
+	await getNetworkDownloadSpeed(bot, chatId)
+})
