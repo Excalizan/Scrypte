@@ -1,3 +1,11 @@
+// irrelevant with the bot, just to keep it alive in replit with uptimerobot
+const express = require('express');
+const app = express();
+const port = 3000;
+app.get('/', (req, res) => res.send('Hello World!'));
+app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`));
+
+
 require('dotenv').config()
 process.env['NTBA_FIX_350'] = 1
 /* required to disable the deprecation warning, 
