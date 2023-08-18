@@ -4,7 +4,7 @@ Telegram bot to download media from Instagram, Youtube and Spotify
 
 ## It took me a lot of time to make this bot, so please give it a star if you like it.
 
-Invite link: [Scrypte](https://t.me/scrypte_bot)
+Bot link: [Scrypte](https://t.me/scrypte_bot)
 
 ## Features
 
