@@ -32,7 +32,17 @@ const bot = new TelegramBot(token, { polling: true })
 console.log('Bot is running...')
 
 // help
-bot.onText(/\/help/, (msg, match) => {
+bot.onText(/\/help/, (msg) => {
+	const chatId = msg.chat.id
+
+	const response =
+		'Welcome to Scrypte!\nSend a valid Instagram, Youtube or Spotify link to download the content.'
+
+	bot.sendMessage(chatId, response)
+})
+
+// start
+bot.onText(/\/start/, (msg) => {
 	const chatId = msg.chat.id
 
 	const response =
