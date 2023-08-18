@@ -1,15 +1,6 @@
-entrypoint = "bot.js"
 
 hidden = [".config", "package-lock.json"]
-
-[interpreter]
-command = [
-    "prybar-nodejs",
-    "-q",
-    "--ps1",
-    "\u0001\u001b[33m\u0002\u0001\u001b[00m\u0002 ",
-    "-i"
-]
+run = "npm run start"
 
 [[hints]]
 regex = "Error \\[ERR_REQUIRE_ESM\\]"
@@ -86,4 +77,4 @@ pattern = "**/{*.js,*.jsx,*.ts,*.tsx,*.json}"
 start = "typescript-language-server --stdio"
 
 [deployment]
-run = ["sh", "-c", "npm start"]
+run = ["sh", "-c", "npm run start"]
