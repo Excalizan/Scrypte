@@ -1,3 +1,9 @@
+require('dotenv').config()
+process.env['NTBA_FIX_350'] = 1
+/* required to disable the deprecation warning, 
+will be fixed when node-telegram-bot-api gets a new update */
+
+
 // irrelevant with the bot, just to keep it alive in replit with uptimerobot
 const express = require('express')
 const app = express()
@@ -7,13 +13,8 @@ app.listen(port, () =>
 	console.log(`Example app listening at http://localhost:${port}`)
 )
 
-require('dotenv').config()
-process.env['NTBA_FIX_350'] = 1
-/* required to disable the deprecation warning, 
-will be fixed when node-telegram-bot-api gets a new update */
-
+// bot
 const TelegramBot = require('node-telegram-bot-api')
-
 const downloadFromYoutube = require('./funcs/youtube')
 const downloadFromInstagram = require('./funcs/instagram')
 const {
@@ -52,7 +53,6 @@ bot.onText(/\/start/, (msg) => {
 })
 
 // !dev commands
-
 // get network upload speed
 bot.onText(/\/upload/, async (msg) => {
 	const chatId = msg.chat.id
