@@ -3,7 +3,6 @@ process.env['NTBA_FIX_350'] = 1
 /* required to disable the deprecation warning, 
 will be fixed when node-telegram-bot-api gets a new update */
 
-
 // irrelevant with the bot, just to keep it alive in replit with uptimerobot
 const express = require('express')
 const app = express()
