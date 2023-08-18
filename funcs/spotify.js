@@ -83,11 +83,12 @@ async function downloadPlaylistFromSpotify(bot, chatId, url) {
 	const playlistData = await spotify.getPlaylist(url).catch((err) => {
 		console.log(err)
 	})
-	bot.sendMessage(chatId, `Downloading playlist "${playlistData.name}"`).catch(
-		(err) => {
-			console.log(err)
-		}
-	)
+	bot.sendMessage(
+		chatId,
+		`Downloading playlist "${playlistData.name}"`
+	).catch((err) => {
+		console.log(err)
+	})
 	const buffer = await spotify.downloadPlaylist(url).catch((err) => {
 		console.log(err)
 		bot.sendMessage(chatId, 'Error downloading playlist').catch((err) => {

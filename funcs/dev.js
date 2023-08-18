@@ -6,8 +6,8 @@ async function getNetworkDownloadSpeed(bot, chatId) {
 	bot.sendMessage(chatId, 'Calculating Download Speed...').catch((err) => {
 		console.log(err)
 	})
-	const baseUrl = 'https://eu.httpbin.org/stream-bytes/500000'
-	const fileSizeInBytes = 500000
+	const baseUrl = 'https://eu.httpbin.org/stream-bytes/50000'
+	const fileSizeInBytes = 50000
 	const speed = await testNetworkSpeed.checkDownloadSpeed(
 		baseUrl,
 		fileSizeInBytes
