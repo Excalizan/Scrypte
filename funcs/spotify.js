@@ -43,9 +43,12 @@ async function downloadAlbumFromSpotify(bot, chatId, url) {
 	const albumData = await spotify.getAlbum(url).catch((err) => {
 		console.log(err)
 	})
+	const albumFormat = albumData.name.split(' - ')
+	const albumName = albumFormat[0]
+	const albumArtist = albumFormat[1]
 	bot.sendMessage(
 		chatId,
-		`Downloading album "${albumData.name}" by "${albumData.artists[0]}"`
+		`Downloading album "${albumName}" by "${albumArtist}"`
 	).catch((err) => {
 		console.log(err)
 	})
