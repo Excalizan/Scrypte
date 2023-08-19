@@ -25,25 +25,8 @@ async function downloadFromYoutube(bot, chatId, url) {
 		// Start the download and pipe the video data to the writable stream
 		ytdl(url, { filter: 'audioandvideo' }).pipe(writeStream)
 
-		// Set up an interval to update the message with the download progress every second
-		let progress = 0
-		const updateInterval = setInterval(() => {
-			progress = writeStream.bytesWritten / (1024 * 1024)
-			bot.editMessageText(
-				`*Downloading video:* ${title} (${progress.toFixed(2)} MB)`,
-				{
-					chat_id: chatId,
-					message_id: message.message_id,
-					parse_mode: 'Markdown', // use Markdown formatting
-				}
-			).catch((err) => {
-				console.log(err)
-			})
-		}, 1000)
-
 		// When the download is complete, send the video and delete the file
 		writeStream.on('finish', () => {
-			clearInterval(updateInterval) // stop updating the message
 			bot.sendVideo(
 				chatId,
 				`content/${title}-${chatId}.mp4`,
