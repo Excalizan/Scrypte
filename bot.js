@@ -1,18 +1,8 @@
-require('dotenv').config()
-process.env['NTBA_FIX_350'] = 1
 /* required to disable the deprecation warning, 
 will be fixed when node-telegram-bot-api gets a new update */
+require('dotenv').config()
+process.env['NTBA_FIX_350'] = 1
 
-// irrelevant with the bot, just to keep it alive in replit with uptimerobot
-const express = require('express')
-const app = express()
-const port = 3000
-app.get('/', (req, res) => res.send('Hello World!'))
-app.listen(port, () =>
-	console.log(`Example app listening at http://localhost:${port}`)
-)
-
-// bot
 const TelegramBot = require('node-telegram-bot-api')
 const downloadFromYoutube = require('./funcs/youtube')
 const downloadFromInstagram = require('./funcs/instagram')
