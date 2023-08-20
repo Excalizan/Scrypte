@@ -9,15 +9,24 @@ cred = {
 const spotify = new Spotify(cred)
 
 async function downloadTrackFromSpotify(bot, chatId, url) {
-	const data = await spotify.getTrack(url).catch((err) => {
+	try {
+		const data = await spotify.getTrack(url).catch((err) => {
+			console.log(err)
+		})
+		bot.sendMessage(
+			chatId,
+			`Downloading track "${data.name}" by "${data.artists[0]}"`
+		).catch((err) => {
+			console.log(err)
+		})
+	} catch (err) {
 		console.log(err)
-	})
-	bot.sendMessage(
-		chatId,
-		`Downloading track "${data.name}" by "${data.artists[0]}"`
-	).catch((err) => {
-		console.log(err)
-	})
+		bot.sendMessage(
+			chatId,
+			'Error finding track, make sure the link is correct'
+		)
+		return
+	}
 	const buffer = await spotify.downloadTrack(url).catch((err) => {
 		console.log(err)
 		bot.sendMessage(chatId, 'Error downloading track')
@@ -40,18 +49,27 @@ async function downloadTrackFromSpotify(bot, chatId, url) {
 }
 
 async function downloadAlbumFromSpotify(bot, chatId, url) {
-	const albumData = await spotify.getAlbum(url).catch((err) => {
+	try {
+		const albumData = await spotify.getAlbum(url).catch((err) => {
+			console.log(err)
+		})
+		const albumFormat = albumData.name.split(' - ')
+		const albumName = albumFormat[0]
+		const albumArtist = albumFormat[1]
+		bot.sendMessage(
+			chatId,
+			`Downloading album "${albumName}" by "${albumArtist}"`
+		).catch((err) => {
+			console.log(err)
+		})
+	} catch (err) {
 		console.log(err)
-	})
-	const albumFormat = albumData.name.split(' - ')
-	const albumName = albumFormat[0]
-	const albumArtist = albumFormat[1]
-	bot.sendMessage(
-		chatId,
-		`Downloading album "${albumName}" by "${albumArtist}"`
-	).catch((err) => {
-		console.log(err)
-	})
+		bot.sendMessage(
+			chatId,
+			'Error finding album, make sure the link is correct'
+		)
+		return
+	}
 	const buffer = await spotify.downloadAlbum(url).catch((err) => {
 		console.log(err)
 		bot.sendMessage(chatId, 'Error downloading album').catch((err) => {
@@ -83,15 +101,24 @@ async function downloadAlbumFromSpotify(bot, chatId, url) {
 }
 
 async function downloadPlaylistFromSpotify(bot, chatId, url) {
-	const playlistData = await spotify.getPlaylist(url).catch((err) => {
+	try {
+		const playlistData = await spotify.getPlaylist(url).catch((err) => {
+			console.log(err)
+		})
+		bot.sendMessage(
+			chatId,
+			`Downloading playlist "${playlistData.name}"`
+		).catch((err) => {
+			console.log(err)
+		})
+	} catch (err) {
 		console.log(err)
-	})
-	bot.sendMessage(
-		chatId,
-		`Downloading playlist "${playlistData.name}"`
-	).catch((err) => {
-		console.log(err)
-	})
+		bot.sendMessage(
+			chatId,
+			'Error finding playlist, make sure the link is correct'
+		)
+		return
+	}
 	const buffer = await spotify.downloadPlaylist(url).catch((err) => {
 		console.log(err)
 		bot.sendMessage(chatId, 'Error downloading playlist').catch((err) => {
