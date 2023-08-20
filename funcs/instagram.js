@@ -54,7 +54,13 @@ function downloadFromInstagram(bot, chatId, url) {
 			}
 		})
 		.catch((err) => {
-			bot.sendMessage(chatId, "The link you sent might be invalid\nIf you are sure it's not, contact the developer: @excalizan\n" + 'Error: ' + err.message).catch((err) => {
+			bot.sendMessage(
+				chatId,
+				"The link you sent might be invalid\nIf you are sure it's not, contact the developer: @excalizan\n"
+			).catch((err) => {
+				console.log(err)
+			})
+			bot.sendMessage(chatId, 'Error: ' + err.message).catch((err) => {
 				console.log(err)
 			})
 			console.log(err)
