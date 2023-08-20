@@ -60,9 +60,14 @@ function downloadFromInstagram(bot, chatId, url) {
 			).catch((err) => {
 				console.log(err)
 			})
-			bot.sendMessage(chatId, 'Error: ' + err.message).catch((err) => {
-				console.log(err)
-			})
+			// wait 200ms before sending error message
+			setTimeout(() => {
+				bot.sendMessage(chatId, 'Error: ' + err.message).catch(
+					(err) => {
+						console.log(err)
+					}
+				)
+			}, 200)
 			console.log(err)
 		})
 }
